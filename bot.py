@@ -2,14 +2,15 @@ import praw
 import HTMLParser
 import urllib2
 import time
- 
-REDDIT_USERNAME = ''
-REDDIT_PASS = ''
+from passwords.py import *
+
+REDDIT_USERNAME = username
+REDDIT_PASS = password
 SUBREDDIT_NAME = ''
- 
+
 def determineMonthByWeekday(d):
     current_day = time.strftime("%A", time.gmtime())
- 
+
     if current_day == "Tuesday":
         month_string = "January/February"
     elif current_day == "Wednesday":
@@ -24,19 +25,19 @@ def determineMonthByWeekday(d):
         month_string = "November/December"
     else:
         month_string = "DISCUSSION DAY"
- 
+
     print "Updating month..."
     d['current_months'] = "**" + month_string
- 
+
 def determineIfYearNeedsToChange(d):
     year = int(d['current_year'][:-4])
     # Checks if it is after midnight on a Tuesday
     if time.strftime("%A") == 'Tuesday':
         print "Updating year..."
         year += 1
- 
+
     d['current_year'] = str(year) + '**\n\n'
- 
+
 def parseSidebar(r, sub):
     while True:
         try:
@@ -52,26 +53,26 @@ def parseSidebar(r, sub):
         except Exception, e:
             print "couldn't Reddit: {}".format(str(e))
             raise
- 
+
     sidebar = settings['description']
     substring = "["
     index = sidebar.find(substring)
- 
+
     print "Parsing Sidebar..."
     current_time_string = sidebar[:index]
     current_time_list = current_time_string.split(' ')
- 
+
     return {'index': index,
             'sidebar': sidebar,
             'current_months': current_time_list[1],
             'current_year': current_time_list[2] }
- 
+
 def updateSidebar(r, sub, d):
     new_time_list = ['#####',d['current_months'], d['current_year']]
     new_time_string = (' ').join(new_time_list)
     bottom_of_sidebar = d['sidebar'][d['index']:]
     new_sidebar = HTMLParser.HTMLParser().unescape(new_time_string + bottom_of_sidebar)
- 
+
     print "Updating Sidebar..."
     while True:
         try:
@@ -87,7 +88,7 @@ def updateSidebar(r, sub, d):
         except Exception, e:
             print "couldn't Reddit: {}".format(str(e))
             raise
- 
+
 def main():
     while True:
         try:
@@ -105,7 +106,7 @@ def main():
         except Exception, e:
             print "couldn't Reddit: {}".format(str(e))
             raise
- 
+
     while True:
         if time.strftime("%H %m", time.gmtime()) == "00 00":
             d = parseSidebar(r, sub)
@@ -113,6 +114,6 @@ def main():
             determineIfYearNeedsToChange(d)
             updateSidebar(r, sub, d)
             return
- 
+
 if __name__ == "__main__":
     main()
