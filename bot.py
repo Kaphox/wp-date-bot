@@ -6,7 +6,7 @@ from passwords.py import *
 
 REDDIT_USERNAME = username
 REDDIT_PASS = password
-SUBREDDIT_NAME = ''
+SUBREDDIT_NAME = 'worldpowers'
 
 def determineMonthByWeekday(d):
     current_day = time.strftime("%A", time.gmtime())
