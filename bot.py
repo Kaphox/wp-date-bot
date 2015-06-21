@@ -2,10 +2,9 @@ import praw
 import HTMLParser
 import urllib2
 import time
-from passwords.py import *
 
-REDDIT_USERNAME = username
-REDDIT_PASS = password
+REDDIT_USERNAME = 'Kaphoxbot'
+REDDIT_PASS = 'fakepassword'
 SUBREDDIT_NAME = 'worldpowers'
 
 def determineMonthByWeekday(d):
